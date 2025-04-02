@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Acciones;
+use App\Models\AltaAccion;
+use DateTime;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+
+use function Laravel\Prompts\alert;
+
+class StockController extends Controller
+{
+    public function show ($symbol){
+        //construir la url
+        $baseUrl= env('ALPHAVANTAGE_BASE_URL');
+        $apiKey= env('ALPHAVANTAGE_API_KEY');
+
+        //conseguir el ultimo dia habil 
+
+        function obtenerUltimodihabil ($fecha = null){
+            date_default_timezone_set('America/New_York');
+
+            try {
+                if ($fecha== null){
+                    $fecha= date('Y-m-d');
+                }
+            $fechaObj = new DateTime($fecha);
+
+            $diaSemana = $fechaObj->format('N');
+
+            if ($diaSemana ==6 ){
+                $fechaObj->modify('-1 day');
+            } elseif ($diaSemana ==7 ){
+                $fechaObj->modify('-2 day');
+            } elseif ($diaSemana==1){
+                $horaActual = date('H:i');
+                $horaLimite= '17:30';
+
+                if ($horaActual< $horaLimite){
+                    $fechaObj->modify('-3 day');
+                }
+            } elseif ($diaSemana<6 && $diaSemana>1){
+                $horaActual = date('H:i');
+                $horaLimite= '17:30';
+                if ($horaActual< $horaLimite){
+                    $fechaObj->modify('-1 day');
+                }
+            }
+            
+            return $fechaObj-> format ('Y-m-d');} catch (Exception $e){
+                throw new Exception( 'Formato fecha invalido');
+            }};
+
+          $fechaActual= obtenerUltimodihabil();
+            
+            
+        //hacer la solicitud HTTP
+
+    $response= Http::get($baseUrl, [
+        'function' => 'RSI',
+        'symbol' => $symbol,
+        'interval' => 'daily',
+        'time_period'=> '14',
+        'series_type'=> 'close',
+        'apikey' => $apiKey,
+    ]);
+
+    $response2= Http::get($baseUrl, [
+        'function' => 'TIME_SERIES_DAILY',
+        'symbol' => $symbol,
+        'apikey' => $apiKey,
+    ]);
+
+    if ($response->successful() && $response2->successful()) {
+        $data = $response->json();
+        $data2= $response2->json();
+        if (isset($data ["Information"])){ return view('limiteDiario');} 
+
+
+        else if (isset ($data["Technical Analysis: RSI"])){;
+
+        //if ($validadorRSI)
+        $rsidata['accion']=$data["Technical Analysis: RSI"]["$fechaActual"]["RSI"];
+        $rsidata['status'] = "";
+
+    //SE PIDE EL VALOR ACTUAL DE LA ACCION
+    $rsidata['precio']=$data2["Time Series (Daily)"][$fechaActual]["4. close"] ?? "No disponible";
+      //  dd($rsidata['precio']);
+        
+    //AQUI SE ARMA LO QUE SE PROYECTA EN PANATALLA 
+       if($rsidata['accion']<20) { $rsidata['status']= "superblue"; $rsidata['comentario']= "El momento más optimo para comprar, llegando al valor minimo relativo"; $rsidata['simbolo']= $symbol; $rsidata['precio'];} 
+        elseif ($rsidata['accion']<30) { $rsidata['status']= "DIAMANTE" ;$rsidata['comentario']= "DIAMANTE EN BRUTO : Momento de comprar";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']<50) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "TIEMPO DE ESPERAR: en valor relativo medio";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']>60) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "PREPARATE PARA SER CASH!!: podría subir más pero no es lo habitual"; $rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']>70) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "YA WEY! VENDELO!: está en valores máximos relativos";$rsidata['simbolo']= $symbol; $rsidata['precio']; }  
+            //return response()->json(['error'=> 'No se pudo obtener datra'], 500);
+
+        //dd($rsidata);
+        
+        //return response()->json($data);
+        //RETORNAR DATOS DE SESION
+        if (Auth::check()){
+            $rsidata['datosuser']=Auth::id();
+        };
+        
+        return view('show')->with('rsidata', $rsidata);
+    }}
+        return view('error');
+    }
+
+    public function login(){
+        return view('login');
+    }
+
+    public function iniciouser(){
+        if (Auth::check()){
+            $iduser['datosuser']=Auth::id();
+        };
+        //consulta seguimiento de acciones del usuario en db
+        $acciones = AltaAccion::where('idusuario', $iduser['datosuser'])->get(); //es un metodo elocuent que permite acceder a la tabla que modifica el modelo alta accion 
+        //dd($acciones);
+        return view('iniciouser')->with('acciones', $acciones);
+    }
+
+    
+
+    public function registration(){
+        return view('registration');
+    }
+   
+}
+

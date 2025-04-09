@@ -28,10 +28,23 @@
     <input type="text" class="form-control" id="accion" name="nombre" placeholder="Simbolo de la accion"> </input>
     <button id="buscar" type="submit" class="btn btn-primary" value=''>Buscar</button>
     </form>
+    <br>
+    <h6 style="text-align: center;">Ingresa el nombre técnico de la acción, ej: MRNA</h6>
+    <br>
+    <h6 style="text-align: center;">Para ver modo de prueba: <br> usuario: betocasella@gm.com  <br> contraseña: admin </h6>
     <div>
     @yield ('contenido')
     @yield ('seguimiento')
     </div>
+
+    <footer>
+        <div style="text-align: center; color:grey;">
+            <br>
+        <h6>2024 Copyright</h6>
+        <h6>Inversionito</h6>
+        <br>
+        </div>
+    </footer>
     <script>
         const form= document.getElementById("myForm");
         const input =document.getElementById("accion");

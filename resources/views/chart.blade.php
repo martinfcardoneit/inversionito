@@ -158,5 +158,14 @@
         
 
     </script>
+
+<footer>
+        <div style="text-align: center; color:grey;">
+            <br>
+        <h6>2024 Copyright</h6>
+        <h6>Inversionito</h6>
+        <br>
+        </div>
+    </footer>
 </body>
 </html>

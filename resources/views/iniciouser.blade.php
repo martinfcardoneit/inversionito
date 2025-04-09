@@ -89,6 +89,15 @@
     @endif
     </div>
 
+    <footer>
+        <div style="text-align: center; color:grey;">
+            <br>
+        <h6>2024 Copyright</h6>
+        <h6>Inversionito</h6>
+        <br>
+        </div>
+    </footer>
+
     <script>
         const form= document.getElementById("myForm");
         const input =document.getElementById("accion");

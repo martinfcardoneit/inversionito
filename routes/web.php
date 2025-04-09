@@ -13,7 +13,6 @@ Route::get('/', function () {
 
 //RUTA RESULTADO DE BUSQUEDA 
 Route::get('/stock/{symbol}', [StockController::class, 'show']);
-Route::get('/showLog/{symbol}', [StockController::class, 'showLog']);
 
 //RUTA A LOGUEARSE
 Route::get('login', [StockController::class,'login'])->name('login'); //se tiene que llamar asi el alias si o si para que la encuentre lVL

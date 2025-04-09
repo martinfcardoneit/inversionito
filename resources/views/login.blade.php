@@ -16,7 +16,7 @@
    <form  method="post" action="/login" class="formul">
     @method('POST') <!--  recordar poner esto porque laravel solo acepta get y put , asique hay que forzar al post *el router no debe tener espacios-->
     @csrf <!--  recordar poner siempre en los formularios post el @csrf -->
-    <div class="control">
+    <div >
         <input type="email" id="email" name="email" placeholder="Email usuario">
         @error('email')
     <div> {{$message}}</div>

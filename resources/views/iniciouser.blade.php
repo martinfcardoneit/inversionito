@@ -17,7 +17,8 @@
         <h3> Bienvenido {{session('user')->nombre}}</h3>
         @endif
         <h4>I N V E R S I O N I T O</h4>
-        <h6> ANALIZADOR DE VALOR RELATIVO DE ACCIONES</h6>
+        <h5> Tu brújula para valorar acciones a corto plazo!</h5>
+        <h6>*Inversionito es una herramienta más de análisis, recuerda que tú eres responsable por tus inversiones.</h6>
     </div>
     <div class="encabezado">
     <div class="banner"> <img src="../img/inversionito.jpg" alt=""></div>
@@ -55,6 +56,11 @@
             background-color: #BFA893;
         }
     </style>
+    @if (session('mensaje'))
+        <div id="alerta" class="alert alert-success" style="text-align: center; margin-top: 10px;">
+            {{session ('mensaje') }}
+        </div>
+    @endif
     <table>
         <tr>
             <th> Nombre de la acción</th>
@@ -111,7 +117,14 @@
             console.log (valor);
         } );
 
-        
+        setTimeout (function(){
+            let alerta= document.getElementById('alerta');
+            if (alerta) {
+                alerta.style.transition = 'opacity 0.5s ease';
+                alerta.style.opacity= '0';
+                setTimeout(() =>alerta.remove(),500);
+            }
+        },3000);
     </script>
 </body>
 </html>

@@ -114,7 +114,8 @@ class Seguimientos extends Controller
     //dd($simbolo, $idusuario, $diashabiles);
 
     //consulta seguimiento de acciones del usuario en db
-    function diasConsultados($simbolo, $idusuario ,$arrayDiasHabiles ){
+    function diasConsultados($simbolo, $idusuario ,$arrayDiasHabiles,$idseguimiento){
+        if ($arrayDiasHabiles <= 15){
         $consultaDiasAlmacenados = AltaAccion::where('nombretecnico', $simbolo)
                                             ->where('idusuario', $idusuario)
                                             ->where(function($query) use ($arrayDiasHabiles){
@@ -122,13 +123,21 @@ class Seguimientos extends Controller
                                                     $query->orWhereNull ("rsi{$i}");
                                                 }
                                             }) ->get(); 
-                                        return $consultaDiasAlmacenados;}
+                                        return $consultaDiasAlmacenados;} else {
+                                            $accion= AltaAccion::where('id', $idseguimiento)->first();
+                                            if ($accion) {
+                                                //$accion->delete();
+                                                //mensaje de alerta
+                                                session()->flash('mensaje', 'Este seguimiento superó los 15 días hábiles y se eliminó de la base de datos. Por favor inicia un nuevo seguimiento');
+                                            }
+                                            
+                                            return redirect('iniciouser');}}
 
     //dd(diasConsultados($simbolo, $idusuario, $arrayDiasHabiles));
 
     //OOOOOOOOOOJOOOOOOOOOOOOO SI ESTA SIGNOO DE ADMIRACIONNNN PARA VERSION PRUEBA SI SE ACTUALIZARON YA LOS DATOS DEL DIA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    if (!diasConsultados($simbolo, $idusuario, $arrayDiasHabiles)){
+    if (!diasConsultados($simbolo, $idusuario, $arrayDiasHabiles,$idseguimiento)){
 
      //dd(diasConsultados($simbolo, $idusuario, $arrayDiasHabiles));   
 
@@ -204,7 +213,7 @@ class Seguimientos extends Controller
     //$numeroIndice=count($valoresSeguimiento)/2;
     //dd($numeroIndice);
 
-} else {
+} else if ($arrayDiasHabiles<=15){ //aqui puse el if para que si han pasado mas de 15 dias no muestre el chart al que seguiría la funcion
 
     // FUNCION GET
     $valoresSeguimiento= AltaAccion::presentarSeguimiento($idseguimiento);
@@ -218,7 +227,7 @@ class Seguimientos extends Controller
     return "No Faltan dias";
 ;
 
-}}
+} else {return redirect('iniciouser');}}
 
 //BAJA DE ACCION
 public function destroy($id){

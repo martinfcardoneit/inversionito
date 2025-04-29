@@ -135,6 +135,15 @@ body, html {
 .login{
     font-size: small;
     justify-content: center;
+    margin-right: 15px;
+    
+}
+
+.divlogin {
+    width: 100%;
+    position: fixed;
+    background-color: #BFA893;
+    z-index: 3;
 }
 
 .formul{

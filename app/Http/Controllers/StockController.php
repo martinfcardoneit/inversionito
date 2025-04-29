@@ -94,7 +94,7 @@ class StockController extends Controller
     //AQUI SE ARMA LO QUE SE PROYECTA EN PANATALLA 
        if($rsidata['accion']<20) { $rsidata['status']= "superblue"; $rsidata['comentario']= "El momento más optimo para comprar, llegando al valor minimo relativo"; $rsidata['simbolo']= $symbol; $rsidata['precio'];} 
         elseif ($rsidata['accion']<30) { $rsidata['status']= "DIAMANTE" ;$rsidata['comentario']= "DIAMANTE EN BRUTO : Momento de comprar";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
-        elseif ($rsidata['accion']<50) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "TIEMPO DE ESPERAR: en valor relativo medio";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']<50) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "TIEMPO DE ESPERAR: no es conveniente comprar ni vender";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
         elseif ($rsidata['accion']>60) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "PREPARATE PARA SER CASH!!: podría subir más pero no es lo habitual"; $rsidata['simbolo']= $symbol; $rsidata['precio'];}
         elseif ($rsidata['accion']>70) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "YA WEY! VENDELO!: está en valores máximos relativos";$rsidata['simbolo']= $symbol; $rsidata['precio']; }  
             //return response()->json(['error'=> 'No se pudo obtener datra'], 500);

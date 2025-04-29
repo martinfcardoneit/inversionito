@@ -10,7 +10,7 @@
     <title>Inversionito</title>
 </head>
 <body>
-    <div style="text-align: right; margin-right:20px"> 
+    <div class="divlogin" style="text-align: right; margin-right:20px"> 
     
         <a class="login" href="/login"> Login</a>
         <br>
@@ -19,7 +19,8 @@
     </div>
     <div class="titulo">
         <h4>I N V E R S I O N I T O</h4>
-        <h6> ANALIZADOR DE VALOR RELATIVO DE ACCIONES</h6>
+        <h5> Tu brújula para valorar acciones a corto plazo!</h5>
+        <h6>*Inversionito es una herramienta más de análisis, recuerda que tú eres responsable por tus inversiones.</h6>
     </div>
     <div class="encabezado">
     <div class="banner"> <img src="../img/inversionito.jpg" alt=""></div>

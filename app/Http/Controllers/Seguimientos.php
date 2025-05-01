@@ -119,6 +119,7 @@ class Seguimientos extends Controller
         $consultaDiasAlmacenados = AltaAccion::where('nombretecnico', $simbolo)
                                             ->where('idusuario', $idusuario)
                                             ->where(function($query) use ($arrayDiasHabiles){
+                                                //dd($arrayDiasHabiles);
                                                 for ($i=0; $i <= $arrayDiasHabiles; $i++){
                                                     $query->orWhereNull ("rsi{$i}");
                                                 }
@@ -137,7 +138,7 @@ class Seguimientos extends Controller
 
     //OOOOOOOOOOJOOOOOOOOOOOOO SI ESTA SIGNOO DE ADMIRACIONNNN PARA VERSION PRUEBA SI SE ACTUALIZARON YA LOS DATOS DEL DIA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    if (!diasConsultados($simbolo, $idusuario, $arrayDiasHabiles,$idseguimiento)){
+    if (diasConsultados($simbolo, $idusuario, $arrayDiasHabiles,$idseguimiento)){
 
      //dd(diasConsultados($simbolo, $idusuario, $arrayDiasHabiles));   
 
@@ -167,13 +168,14 @@ class Seguimientos extends Controller
     ]);
     if ($response->successful()) {
         $data = $response->json();
+        //dd($data);
         $rsidata=[];
         if (isset($data ["Information"])){ return view('limiteDiario');} 
 
         foreach ($fechasHabilesEnFormato as $fecha ){
             $rsidata['accion'][]=$data["Technical Analysis: RSI"]["$fecha"]["RSI"];}
          ;
-    };
+    } else { dd('no llega nada');};
 
     $response2= Http::get($baseUrl, [
         'function' => 'TIME_SERIES_DAILY',
@@ -205,7 +207,8 @@ class Seguimientos extends Controller
     $valoresSeguimiento= AltaAccion::presentarSeguimiento($idseguimiento);
     $preciovalues=[];
     $rsivalues=[];
-    
+    //dd($preciovalues, $rsivalues);
+
     //dd($evolucionAccion);
    return view('chart')->with('valoresSeguimiento', $valoresSeguimiento);
    
@@ -218,7 +221,7 @@ class Seguimientos extends Controller
     // FUNCION GET
     $valoresSeguimiento= AltaAccion::presentarSeguimiento($idseguimiento);
 
-    //dd($valoresSeguimiento);
+    dd($valoresSeguimiento);
     return view('chart')->with('valoresSeguimiento', $valoresSeguimiento);
 
     //$numeroIndice=count($valoresSeguimiento)/2;

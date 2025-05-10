@@ -17,7 +17,10 @@ class AltaAccion extends Model
     protected $primaryKey='idusuario';
     protected $fillable=['id', 'nombretecnico', 'idusuario', 'accion', 'precio0', 'rsi0', 'precio1', 'rsi1', 'precio2', 'rsi2', 'precio3', 'rsi3',
     'precio4', 'rsi4', 'precio5', 'rsi5','precio6', 'rsi6','precio7', 'rsi7','precio8', 'rsi8','precio9', 'rsi9','precio10', 'rsi10',
-    'precio11', 'rsi11','precio12', 'rsi12','precio13', 'rsi13','precio14', 'rsi14','precio15', 'rsi15'];
+    'precio11', 'rsi11','precio12', 'rsi12','precio13', 'rsi13','precio14', 'rsi14','precio15', 'rsi15','precio16', 'rsi16','precio17', 'rsi17', 'precio18','rsi18',
+     'precio19', 'rsi19','precio20', 'rsi20','precio21', 'rsi21','precio22', 'rsi22','precio23', 'rsi23','precio24', 'rsi24','precio25', 'rsi25','fecha0','fecha1','fecha2',
+    'fecha3','fecha4','fecha5','fecha6','fecha7','fecha8','fecha9','fecha10','fecha11','fecha12','fecha13','fecha14','fecha15','fecha16','fecha17','fecha18',
+    'fecha19','fecha20','fecha21','fecha22','fecha23','fecha24','fecha25'];
     //protected $dates = ['deletes_at'];
 
     public static function alta($datosFormulario){
@@ -28,10 +31,11 @@ class AltaAccion extends Model
             'nombretecnico' => $datosFormulario ['accion'],
             'rsi0' => $datosFormulario ['rsi0'],
             'precio0' => $datosFormulario['precio'],
+            'fecha0' => $datosFormulario['fechahoy']
         ]);
     }
 
-    public static function modificar($idseguimiento,$rsidata,$valueData){
+    public static function modificar($idseguimiento,$rsidata,$valueData,$fechasHabilesEnFormato){
        if (is_array($rsidata) && count($rsidata)===1){
         $rsidata = array_values($rsidata)[0];
        }
@@ -43,7 +47,7 @@ class AltaAccion extends Model
             $arrayrsi=[];
 
             foreach ($rsidata as $index => $rsi){
-                    $columnarsi= 'rsi' . (intval($index));
+                    $columnarsi= 'rsi' . (intval($index+1));
                     $arrayrsi[$columnarsi]=$rsi;
             }
 
@@ -54,12 +58,18 @@ class AltaAccion extends Model
                }
             $arrayprecio=[];
             foreach ($valueData as $index => $precio){
-                $columnaprecio= 'precio' . (intval($index));
+                $columnaprecio= 'precio' . (intval($index+1));
                 $arrayprecio[$columnaprecio]=$precio;
+        }
+
+        foreach ($fechasHabilesEnFormato as $index=> $fecha){
+            $columnafecha='fecha' .(intval($index+1));
+            $arrayfechas[$columnafecha]=$fecha;
         }
             
         $accion->update($arrayrsi);
         $accion->update($arrayprecio);
+        $accion->update($arrayfechas); //recordar que si funciona hay que crear en tabla sql local hasta fecha 15, y en tabla de hostinger tambien
             return $accion;
         }
         return null;

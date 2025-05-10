@@ -115,7 +115,7 @@ class Seguimientos extends Controller
 
     //consulta seguimiento de acciones del usuario en db
     function diasConsultados($simbolo, $idusuario ,$arrayDiasHabiles,$idseguimiento){
-        if ($arrayDiasHabiles <= 15){
+        if ($arrayDiasHabiles <= 25){
         $consultaDiasAlmacenados = AltaAccion::where('nombretecnico', $simbolo)
                                             ->where('idusuario', $idusuario)
                                             ->where(function($query) use ($arrayDiasHabiles){
@@ -127,9 +127,9 @@ class Seguimientos extends Controller
                                         return $consultaDiasAlmacenados;} else {
                                             $accion= AltaAccion::where('id', $idseguimiento)->first();
                                             if ($accion) {
-                                                //$accion->delete();
+                                                $accion->delete();
                                                 //mensaje de alerta
-                                                session()->flash('mensaje', 'Este seguimiento superó los 15 días hábiles y se eliminó de la base de datos. Por favor inicia un nuevo seguimiento');
+                                                session()->flash('mensaje', 'Este seguimiento superó los 25 días hábiles y se eliminó de la base de datos. Por favor inicia un nuevo seguimiento');
                                             }
                                             
                                             return redirect('iniciouser');}}
@@ -168,7 +168,7 @@ class Seguimientos extends Controller
     ]);
     if ($response->successful()) {
         $data = $response->json();
-        //dd($data);
+        //dd($response);
         $rsidata=[];
         if (isset($data ["Information"])){ return view('limiteDiario');} 
 
@@ -189,19 +189,13 @@ class Seguimientos extends Controller
         foreach ($fechasHabilesEnFormato as $fecha ){
             $valueData['accion'][]=$data2["Time Series (Daily)"][$fecha]["4. close"] ?? "No disponible";
         }
-        //dd($valueData);
-        /*$rsidata=[];
-        if (isset($data ["Information"])){ return view('limiteDiario');} 
-
-        foreach ($fechasHabilesEnFormato as $fecha ){
-            $rsidata['accion'][]=$data["Technical Analysis: RSI"]["$fecha"]["RSI"];}
-         ;*/
+      
     };
 
     
     
     //SENTENCIA MYSQL
-    AltaAccion::modificar($idseguimiento,$rsidata,$valueData);
+    AltaAccion::modificar($idseguimiento,$rsidata,$valueData,$fechasHabilesEnFormato);
     //dd($rsidata['accion']);
     // CONSULTAR SEGUIMIENTO
     $valoresSeguimiento= AltaAccion::presentarSeguimiento($idseguimiento);
@@ -216,12 +210,12 @@ class Seguimientos extends Controller
     //$numeroIndice=count($valoresSeguimiento)/2;
     //dd($numeroIndice);
 
-} else if ($arrayDiasHabiles<=15){ //aqui puse el if para que si han pasado mas de 15 dias no muestre el chart al que seguiría la funcion
+} else if ($arrayDiasHabiles<=25){ //aqui puse el if para que si han pasado mas de 15 dias no muestre el chart al que seguiría la funcion
 
     // FUNCION GET
     $valoresSeguimiento= AltaAccion::presentarSeguimiento($idseguimiento);
 
-    dd($valoresSeguimiento);
+    //dd($valoresSeguimiento);
     return view('chart')->with('valoresSeguimiento', $valoresSeguimiento);
 
     //$numeroIndice=count($valoresSeguimiento)/2;

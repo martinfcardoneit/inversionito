@@ -86,17 +86,47 @@ class StockController extends Controller
         //if ($validadorRSI)
         $rsidata['accion']=$data["Technical Analysis: RSI"]["$fechaActual"]["RSI"];
         $rsidata['status'] = "";
+        $rsidatadiasanteriores=[];
+        //dd($data);
 
+        //aqui debemos averiguar a tres meses hacia atras la evoluci[on de la acción y cargarla en $rsidatadiasanteriores
+        $technicalAnalysis60= $data["Technical Analysis: RSI"] ?? [];
+
+        //limpiarfechas
+        $technicalAnalysis60= array_combine(
+            array_map('trim', array_keys($technicalAnalysis60)),
+            array_values($technicalAnalysis60)
+        );
+        //ordenar de la mas reciente a la antigua
+        krsort($technicalAnalysis60);
+
+        $registros60=array_slice($technicalAnalysis60,0,40,true);
+
+        $arrayRSI60=[];
+
+        foreach ($registros60 as $fecha=>$valor) {
+            if (isset($valor['RSI'])){
+                $fechasinanio=date('d-m',strtotime($fecha));
+
+                $arrayRSI60[]=[
+                    'fecha' =>$fechasinanio,
+                    'RSI'=>(float) $valor['RSI'],
+                ];
+            }
+        }
+    //    dd($arrayRSI60);
+    $rsidata['grafrsi']=$arrayRSI60;
+    
     //SE PIDE EL VALOR ACTUAL DE LA ACCION
     $rsidata['precio']=$data2["Time Series (Daily)"][$fechaActual]["4. close"] ?? "No disponible";
       //  dd($rsidata['precio']);
         
     //AQUI SE ARMA LO QUE SE PROYECTA EN PANATALLA 
        if($rsidata['accion']<20) { $rsidata['status']= "superblue"; $rsidata['comentario']= "El momento más optimo para comprar, llegando al valor minimo relativo"; $rsidata['simbolo']= $symbol; $rsidata['precio'];} 
-        elseif ($rsidata['accion']<30) { $rsidata['status']= "DIAMANTE" ;$rsidata['comentario']= "DIAMANTE EN BRUTO : Momento de comprar";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
-        elseif ($rsidata['accion']<50) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "TIEMPO DE ESPERAR: no es conveniente comprar ni vender";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
-        elseif ($rsidata['accion']>60) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "PREPARATE PARA SER CASH!!: podría subir más pero no es lo habitual"; $rsidata['simbolo']= $symbol; $rsidata['precio'];}
-        elseif ($rsidata['accion']>70) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "YA WEY! VENDELO!: está en valores máximos relativos";$rsidata['simbolo']= $symbol; $rsidata['precio']; }  
+        elseif ($rsidata['accion']<30) { $rsidata['status']= "DIAMANTE" ;$rsidata['comentario']= "DIAMANTE EN BRUTO : Podría resultar buena compra";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']<50) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "TIEMPO DE ESPERAR: no sería el mejor momento para comprar ni vender";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']>60) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "PREPARATE PARA SER CASH!!: podría subir un poco más"; $rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']>70) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "MÁXIMOS RELATIVOS: podría estar en el pico de precio relativo";$rsidata['simbolo']= $symbol; $rsidata['precio']; }  
             //return response()->json(['error'=> 'No se pudo obtener datra'], 500);
 
         //dd($rsidata);
@@ -106,6 +136,8 @@ class StockController extends Controller
         if (Auth::check()){
             $rsidata['datosuser']=Auth::id();
         };
+        //retornar fecha actual
+        $rsidata['fechahoy']=$fechaActual;
         
         return view('show')->with('rsidata', $rsidata);
     }}

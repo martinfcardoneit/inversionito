@@ -58,6 +58,16 @@
         <input type="hidden" name="rsi0" value="{{$rsidata['accion']}}" >
         <input type="hidden" name="precio" value="{{$rsidata['precio']}}" >
         <input type="hidden" name="fechahoy" value="{{$rsidata['fechahoy']}}" >
+       
+        @for($i=0; $i <= 9; $i++)
+        <input type="hidden" name="rsiAnterior{{ $i }}" value="{{ $rsidata['rsiAnterior'][$i] ?? '' }}">
+        @endfor
+        @for($i=0; $i <= 9; $i++)
+        <input type="hidden" name="fechaAnterior{{ $i }}" value="{{ $rsidata['fechaAnterior'][$i] ?? ''  }}">
+        @endfor
+        @for($i=0; $i <= 9; $i++)
+        <input type="hidden" name="precioAnterior{{ $i }}" value="{{ $rsidata['precioAnterior'][$i] ?? '' }}">
+        @endfor
     @endif
     <button style="align-items: center;">Seguir accion</button>
     </div>

@@ -84,10 +84,14 @@ class StockController extends Controller
         else if (isset ($data["Technical Analysis: RSI"])){;
 
         //if ($validadorRSI)
-        $rsidata['accion']=$data["Technical Analysis: RSI"]["$fechaActual"]["RSI"];
+        $rsidata['accion']=$data["Technical Analysis: RSI"]["$fechaActual"]["RSI"] ?? null;
+        //dd($rsidata['accion']);
+        if ($rsidata['accion']===null){
+            return view('sinRespuestaApi');
+        }
         $rsidata['status'] = "";
         $rsidatadiasanteriores=[];
-        //dd($data);
+        //dd($data2);
 
         //aqui debemos averiguar a tres meses hacia atras la evoluci[on de la acción y cargarla en $rsidatadiasanteriores
         $technicalAnalysis60= $data["Technical Analysis: RSI"] ?? [];
@@ -138,6 +142,44 @@ class StockController extends Controller
         };
         //retornar fecha actual
         $rsidata['fechahoy']=$fechaActual;
+
+
+        //retornar los valores RSI y precio de los ultimos 10 dias
+        //recuperamos de 'data' solo la linea de 'Technical Analysis: RSI'
+        $RSI10dias= $data['Technical Analysis: RSI'];
+        //convertimos en array secuencial [0,1,2,3...]
+        $fechas= array_keys($RSI10dias);
+        //excluir la primer fecha
+        $diezDiasAnteriores= array_slice($fechas,1,10);
+
+        $index=0;
+        $RSI10DiasAnteriores=[];
+        foreach ($diezDiasAnteriores as $date){
+            $rsidata["rsiAnterior"][$index]= $RSI10dias[$date]['RSI'];
+            $rsidata["fechaAnterior"][$index]= $date;
+            $index++;
+                
+            };
+        //lo pasamos al rsi al paquete que enviamos a la vista
+        //dd ($rsidata['rsiAnterior[0]']);
+            //dd($RSI10dias, $RSI10DiasAnteriores);
+
+        //dd($data, $data2);
+        //Ahora calculamos el precio de los ultimos 10 dias
+        $Precio10Dias= $data2['Time Series (Daily)'];
+        //usar'e las fechas del calculo del rsi porque son iguales
+        $PRECIO10DiasAnteriores=[];
+        $index=0;
+        foreach ($diezDiasAnteriores as $date) {
+                
+                    $rsidata["precioAnterior"][$index]=$Precio10Dias[$date]['4. close'];
+                    $index++;
+                
+        }
+        //$rsidata['precioAnterior1']=$PRECIO10DiasAnteriores['PRECIO'][0];
+
+        
+        //dd ($rsidata['precioAnterior[0]']);
         
         return view('show')->with('rsidata', $rsidata);
     }}

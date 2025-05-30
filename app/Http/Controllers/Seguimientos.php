@@ -14,6 +14,7 @@ class Seguimientos extends Controller
     public function iniciarseguimiento(Request $request){
 
         $datosFormulario = $request->all();
+        //dd($datosFormulario);
         //ALTA DE USUARIO (si validator no fails)
         AltaAccion::alta($datosFormulario);
 
@@ -151,10 +152,20 @@ class Seguimientos extends Controller
     $symbol= $datosFormularioseguimiento['simbolo'];   
     
     $fechasHabiles=calcularFechasHabiles($FechaAnteriorSinHora,$fechaHoy);
-    $fechasHabilesEnFormato= array_map(fn($fecha)=>$fecha->format('Y-m-d'), $fechasHabiles);
+    $fechasHabilesEnFormat= array_map(fn($fecha)=>$fecha->format('Y-m-d'), $fechasHabiles);
     $valueData=[];
+    
+    foreach ($fechasHabilesEnFormat as $fecha) {
+        if ($fecha !== '2025-05-26' && $fecha !== '2026-01-01' && $fecha !== '2025-06-19' && $fecha !== '2025-07-03' &&
+        $fecha !== '2025-07-04' && $fecha !== '2025-09-01' && $fecha !== '2025-11-27' && $fecha !== '2025-11-28'&& $fecha !== '2025-12-24'
+        && $fecha !== '2025-12-25' && $fecha !== '2026-01-20' && $fecha !== '2026-02-17') {
+            $fechasHabilesEnFormato[]= $fecha;
+        }
+    }
+
     //dd ($fechasHabilesEnFormato);
- 
+        
+    //ACA DEBERIA RECORRER EL ARRAY Y SI ENCUENTRA ALGUN FERIADO ELIMINARLO POR EJ 2025-05-26
 
 
 
@@ -175,7 +186,10 @@ class Seguimientos extends Controller
         foreach ($fechasHabilesEnFormato as $fecha ){
             $rsidata['accion'][]=$data["Technical Analysis: RSI"]["$fecha"]["RSI"];}
          ;
-    } else { dd('no llega nada');};
+    };
+
+    //$datoRespuestaHoy=$rsidata['accion'][]=$data["Technical Analysis: RSI"]["$fechaHoy"]["RSI"];
+    //dd($datoRespuestaHoy);
 
     $response2= Http::get($baseUrl, [
         'function' => 'TIME_SERIES_DAILY',
@@ -199,6 +213,7 @@ class Seguimientos extends Controller
     //dd($rsidata['accion']);
     // CONSULTAR SEGUIMIENTO
     $valoresSeguimiento= AltaAccion::presentarSeguimiento($idseguimiento);
+    //dd($valoresSeguimiento);
     $preciovalues=[];
     $rsivalues=[];
     //dd($preciovalues, $rsivalues);

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{asset('css/estilos.css')}}">
     <script> src="https://cdn.jsdelivr.net/npm/chart.js"</script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>-->
 
     <title>Inversionito</title>
 </head>
@@ -37,6 +37,7 @@
     <h6 style="text-align: center;">Para ver modo de prueba: <br> usuario: betocasella@gm.com  <br> contraseña: admin </h6>
     <div>
     @yield ('contenido')
+    @yield ('contenido2')
     @yield ('seguimiento')
     </div>
 

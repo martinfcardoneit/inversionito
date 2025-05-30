@@ -30,6 +30,7 @@
     <div id="resultadoBusqueda"></div>
     <div>
     @yield ('contenido')
+    @yield ('contenido2')
  <!--
     @if (View::getSections()['contenido'] ?? null=== 'show')
     <div>

@@ -154,6 +154,7 @@ class Seguimientos extends Controller
     $fechasHabiles=calcularFechasHabiles($FechaAnteriorSinHora,$fechaHoy);
     $fechasHabilesEnFormat= array_map(fn($fecha)=>$fecha->format('Y-m-d'), $fechasHabiles);
     $valueData=[];
+    $fechasHabilesEnFormato=[];
     
     foreach ($fechasHabilesEnFormat as $fecha) {
         if ($fecha !== '2025-05-26' && $fecha !== '2026-01-01' && $fecha !== '2025-06-19' && $fecha !== '2025-07-03' &&

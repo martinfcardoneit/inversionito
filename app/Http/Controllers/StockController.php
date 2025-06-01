@@ -129,6 +129,7 @@ class StockController extends Controller
        if($rsidata['accion']<20) { $rsidata['status']= "superblue"; $rsidata['comentario']= "El momento más optimo para comprar, llegando al valor minimo relativo"; $rsidata['simbolo']= $symbol; $rsidata['precio'];} 
         elseif ($rsidata['accion']<40) { $rsidata['status']= "DIAMANTE" ;$rsidata['comentario']= "DIAMANTE EN BRUTO : Podría resultar buena compra";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
         elseif ($rsidata['accion']<50) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "TIEMPO DE ESPERAR: no sería el mejor momento para comprar ni vender";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
+        elseif ($rsidata['accion']<60) { $rsidata['status']= "reloj" ;$rsidata['comentario']= "PODRIA ACERCARSE EL MOMENTO DE VENDER..";$rsidata['simbolo']= $symbol; $rsidata['precio'];}
         elseif ($rsidata['accion']>60) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "PREPARATE PARA SER CASH!!: podría subir un poco más"; $rsidata['simbolo']= $symbol; $rsidata['precio'];}
         elseif ($rsidata['accion']>70) { $rsidata['status']= "MONEY"; $rsidata['comentario']= "MÁXIMOS RELATIVOS: podría estar en el pico de precio relativo";$rsidata['simbolo']= $symbol; $rsidata['precio']; }  
             //return response()->json(['error'=> 'No se pudo obtener datra'], 500);
@@ -180,6 +181,7 @@ class StockController extends Controller
 
         
         //dd ($rsidata['precioAnterior[0]']);
+        $rsidata['simbolo']= $symbol;
         
         return view('show')->with('rsidata', $rsidata);
     }}

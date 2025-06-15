@@ -74,7 +74,7 @@
     </form>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
-    <canvas id="rsiChart" width="100%" max-width= 33vw margin=auto ></canvas>
+    <canvas id="rsiChart" max-heigth="750px" height="500px"  max-width= 90vw margin=auto ></canvas>
     
 
 <script>
@@ -123,6 +123,7 @@
         },
         options: {
             responsive:true,
+            maintanAspectRatio:false,
             plugins: {
                         tooltip: {
                             callbacks: {

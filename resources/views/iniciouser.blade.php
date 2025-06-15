@@ -28,7 +28,7 @@
     <button id="buscar" type="submit" class="btn btn-primary" value=''>Buscar</button>
     </form>
     <div id="resultadoBusqueda"></div>
-    <div>
+    <div class="resultados">
     @yield ('contenido')
     @yield ('contenido2')
  <!--

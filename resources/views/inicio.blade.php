@@ -35,7 +35,7 @@
     <h6 style="text-align: center;">Ingresa el nombre técnico de la acción, ej: MRNA</h6>
     <br>
     <h6 style="text-align: center;">Para ver modo de prueba: <br> usuario: betocasella@gm.com  <br> contraseña: admin </h6>
-    <div>
+    <div class="resultados">
     @yield ('contenido')
     @yield ('contenido2')
     @yield ('seguimiento')
